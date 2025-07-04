@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Browse Notes</title>
+</head>
+<body>
+    <h2>📚 Browse Notes</h2>
+
+    <!-- ✅ Search and Filter Form -->
+    <form method="GET">
+        <input type="text" name="q" placeholder="Search by subject or tags" value="{{ request.GET.q }}">
+        
+        <select name="filter">
+            <option value="">All</option>
+            <option value="free" {% if request.GET.filter == 'free' %}selected{% endif %}>Free</option>
+            <option value="paid" {% if request.GET.filter == 'paid' %}selected{% endif %}>Paid</option>
+        </select>
+
+        <button type="submit">Apply</button>
+    </form>
+
+    <hr>
+
+    <!-- ✅ Notes List -->
+    {% for note in notes %}
+        <div style="margin-bottom: 20px;">
+            <h3>{{ note.title }}</h3>
+            <p><strong>Subject:</strong> {{ note.subject }}</p>
+            <p><strong>Tags:</strong> {{ note.tags }}</p>
+            <p><strong>Uploaded by:</strong> {{ note.uploader.username }}</p>
+            <p><strong>Date:</strong> {{ note.upload_date }}</p>
+            <p><strong>Type:</strong> {% if note.is_paid %}Paid{% else %}Free{% endif %}</p>
+
+            <a href="{{ note.file.url }}" download>📥 Download</a>
+        </div>
+        <hr>
+    {% empty %}
+        <p>No notes found.</p>
+    {% endfor %}
+
+    <br><br>
+
+    <!-- ✅ Navigation -->
+    {% if user.is_authenticated %}
+        <p>👋 Welcome, {{ user.username }} | 
+        <a href="{% url 'upload' %}">Upload Note</a> |
+        <a href="{% url 'logout' %}">Logout</a></p>
+    {% else %}
+        <p><a href="{% url 'login' %}">Login</a> or 
+        <a href="{% url 'signup' %}">Signup</a> to upload</p>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: college-notes
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn notes_marketplace.wsgi:application
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: notes_marketplace.settings
+      - key: PYTHON_VERSION
+        value: 3.11
