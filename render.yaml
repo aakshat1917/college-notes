@@ -6,10 +6,10 @@ services:
     startCommand: "gunicorn notes_marketplace.wsgi:application"
     envVars:
       - key: DATABASE_URL
-        value: your_mysql_url_here
+        value: mysql://root:your-password@your-railway-host:3306/railway
       - key: SECRET_KEY
-        generateValue: true
-      - key: ALLOWED_HOSTS
-        value: college-notes-fzgr.onrender.com
+        value: your-secret-key-here
       - key: DEBUG
         value: False
+      - key: ALLOWED_HOSTS
+        value: college-notes-fzgr.onrender.com
