@@ -55,3 +55,7 @@ def browse_notes(request):
         notes = notes.filter(is_paid=True)
 
     return render(request, 'browse.html', {'notes': notes})
+from django.shortcuts import render
+
+def home(request):
+    return render(request, 'home.html')

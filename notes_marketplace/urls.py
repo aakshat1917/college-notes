@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.urls import path
 
 urlpatterns = [
+    path('', home, name='home'),
+
     path('admin/', admin.site.urls),
 ]
 from django.conf import settings
@@ -31,3 +33,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('notes.urls')),  # include your app's routes
 ]
+from notes.views import home
