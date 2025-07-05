@@ -1,26 +1,13 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login
 from .models import Note
 from .forms import NoteForm
-from django.db.models import Q
 
+def home(request):
+    return render(request, 'home.html')
 
-# ✅ Signup View
-def signup_user(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)  # Automatically log in after signup
-            return redirect('upload')
-    else:
-        form = UserCreationForm()
-    return render(request, 'signup.html', {'form': form})
-
-
-# ✅ Upload Note View (only for logged-in users)
 @login_required
 def upload_note(request):
     if request.method == 'POST':
@@ -34,28 +21,36 @@ def upload_note(request):
         form = NoteForm()
     return render(request, 'upload.html', {'form': form})
 
-
-# ✅ Browse Notes View with Search Support
 def browse_notes(request):
     query = request.GET.get('q')
-    filter_by = request.GET.get('filter')
-
-    notes = Note.objects.all()
-
     if query:
-        notes = notes.filter(
-            Q(title__icontains=query) |
-            Q(subject__icontains=query) |
-            Q(tags__icontains=query)
-        )
-
-    if filter_by == 'free':
-        notes = notes.filter(is_paid=False)
-    elif filter_by == 'paid':
-        notes = notes.filter(is_paid=True)
-
+        notes = Note.objects.filter(title__icontains=query)
+    else:
+        notes = Note.objects.all()
     return render(request, 'browse.html', {'notes': notes})
-from django.shortcuts import render
 
-def home(request):
-    return render(request, 'home.html')
+def signup(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('home')
+    else:
+        form = UserCreationForm()
+    return render(request, 'signup.html', {'form': form})
+
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('home')
+    else:
+        form = AuthenticationForm()
+    return render(request, 'login.html', {'form': form})
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')
