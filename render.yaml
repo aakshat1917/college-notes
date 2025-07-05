@@ -2,7 +2,7 @@ services:
   - type: web
     name: college-notes
     env: python
-    buildCommand: "pip install -r requirements.txt"
+    buildCommand: "./build.sh"
     startCommand: "gunicorn notes_marketplace.wsgi:application"
     envVars:
       - key: DATABASE_URL
@@ -10,6 +10,6 @@ services:
       - key: SECRET_KEY
         generateValue: true
       - key: ALLOWED_HOSTS
-        value: college-notes.onrender.com
+        value: college-notes-fzgr.onrender.com
       - key: DEBUG
         value: False
