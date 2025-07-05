@@ -2,10 +2,14 @@ services:
   - type: web
     name: college-notes
     env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn notes_marketplace.wsgi:application
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn notes_marketplace.wsgi:application"
     envVars:
-      - key: DJANGO_SETTINGS_MODULE
-        value: notes_marketplace.settings
-      - key: PYTHON_VERSION
-        value: 3.11
+      - key: DATABASE_URL
+        value: your_mysql_url_here
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_HOSTS
+        value: college-notes.onrender.com
+      - key: DEBUG
+        value: False
