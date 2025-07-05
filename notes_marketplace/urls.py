@@ -1,9 +1,13 @@
-# notes_marketplace/urls.py
-
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('notes.urls')),  # ✅ this includes your app's URLs for homepage and others
+    path('', include('notes.urls')),  # includes your app’s URLs
 ]
+
+# Serving media files in development
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
